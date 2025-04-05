@@ -4,6 +4,12 @@
 как изменяется средний чек для каждого заведения от года к году за все года за исключением 2023 года. 
 Все столбцы со средним чеком округлите до второго знака после запятой.*/
 
+/*
+Исправления.
+Добавлено партиционирование PARTITION BY cafe_name для группировки по каждому ресторану.
+Сортировка ORDER BY year обеспечивает правильное упорядочение данных по годам.
+*/ 
+
 DROP MATERIALIZED VIEW IF EXISTS cafe.avg_check_change_by_year;
 CREATE MATERIALIZED VIEW cafe.avg_check_change_by_year AS
 WITH avg_check_years AS (
@@ -23,6 +29,6 @@ SELECT
     cafe_name, 
     type, 
     ROUND(avg_check, 2) AS current_avg_check, 
-    ROUND(LAG(avg_check, 1) OVER(), 2) AS prev_avg_check,
-    ROUND((avg_check - LAG(avg_check, 1) OVER()) / LAG(avg_check, 1) OVER() * 100, 2) AS check_change_percentage
+    ROUND(LAG(avg_check, 1) OVER(PARTITION BY cafe_name ORDER BY year), 2) AS prev_avg_check,
+    ROUND((avg_check - LAG(avg_check, 1) OVER(PARTITION BY cafe_name ORDER BY year)) / LAG(avg_check, 1) OVER(PARTITION BY cafe_name ORDER BY year) * 100, 2) AS check_change_percentage
 FROM avg_check_years;
