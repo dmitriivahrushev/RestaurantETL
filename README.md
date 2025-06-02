@@ -1,6 +1,6 @@
 **Gastro Hub**
 --
-![Gastro Hub](png/image.jpeg)
+![Gastro Hub](png/hub.png)
 **Описание проекта**
 --
 **В файле дампа содержатся данные о сети ресторанов Gastro Hub.**
